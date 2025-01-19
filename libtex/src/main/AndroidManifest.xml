@@ -1,2 +1,8 @@
-<manifest package="io.nano.tex"
-    xmlns:android="http://schemas.android.com/apk/res/android"/>
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    package="io.nano.tex"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-sdk
+    android:minSdkVersion="26"
+    tools:ignore="GradleOverrides" />
+</manifest>

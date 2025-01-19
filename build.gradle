@@ -3,14 +3,8 @@
 buildscript {
 
     ext {
-        compileSdk = 27
-        minSdk = 14
-
-        bintrayRepo = 'maven'
-        bintrayName = 'AndroidLaTeXMath'
-
-        bintrayRepo = 'maven'
-        bintrayName = 'AndroidLaTeXMath'
+        compileSdk = 35
+        minSdk = 26
 
         publishedGroupId = 'io.nano'
         libraryName = 'AndroidLaTeXMath'
@@ -32,15 +26,11 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
-
-        classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
-
+        classpath 'com.android.tools.build:gradle:8.7.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -49,7 +39,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 

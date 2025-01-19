@@ -1,25 +1,39 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion compileSdk
+    compileSdkVersion 35
+
+    namespace 'io.nano.tex.test'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     defaultConfig {
         applicationId "io.nano.tex.test"
-        minSdkVersion minSdk
-        targetSdkVersion compileSdk
+        minSdkVersion 26
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
+        externalNativeBuild {
+            cmake {
+                cppFlags "-Wl,--build-id -g, -fsanitize=address"  // Generate debug information for LLDB
+                cFlags "-fsanitize=address"
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            ndk {
+                debugSymbolLevel 'FULL'  // This ensures full debugging symbols are generated
+            }
         }
     }
 
@@ -41,5 +55,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':libtex')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.20"
 }

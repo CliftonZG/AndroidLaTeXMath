@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AndroidLaTeXMath</string>
+    <string name="next_sample">NEXT SAMPLE</string>
+    <string name="debug">DEBUG</string>
 </resources>

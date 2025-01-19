@@ -1,5 +1,7 @@
 LOCAL_PATH := $(call my-dir)
 
+LOCAL_CFLAGS += -g  # Add debugging symbols
+
 include $(CLEAR_VARS)
 
 LOCAL_LDLIBS := -lm -llog

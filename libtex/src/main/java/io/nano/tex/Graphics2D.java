@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.text.TextPaint;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -49,20 +50,29 @@ public final class Graphics2D {
     }
 
     public Graphics2D(Canvas canvas) {
-        if (canvas != null) this.canvas = new WeakReference<>(canvas);
-        init();
+        try {
+            if (canvas != null) this.canvas = new WeakReference<>(canvas);
+            init();
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     private void init() {
-        paint.setAntiAlias(true);
-        // Do not set dither here since we don't draw any bitmap to accelerate the draw speed
-        // paint.setDither(true);
-        /*
-         * Do not use subpixel feature here since the subpixel OP will cause the drawing element
-         * change its position dynamically, we need exactly the right position here
-         */
-        // paint.setSubpixelText(true);
-        paint.setTextSize(46);
+        try {
+            paint.setAntiAlias(true);
+            // Do not set dither here since we don't draw any bitmap to accelerate the draw speed
+            // paint.setDither(true);
+            /*
+             * Do not use subpixel feature here since the subpixel OP will cause the drawing element
+             * change its position dynamically, we need exactly the right position here
+             */
+            // paint.setSubpixelText(true);
+            paint.setTextSize(46);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
+
     }
 
     public void setCanvas(Canvas canvas) {
@@ -70,8 +80,13 @@ public final class Graphics2D {
     }
 
     public Canvas getCanvas() {
-        if (canvas == null) return null;
-        return canvas.get();
+        try {
+            if (canvas == null) return null;
+            return canvas.get();
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+            throw new RuntimeException("onDraw error");
+        }
     }
 
     public Paint getPaint() {
@@ -79,12 +94,16 @@ public final class Graphics2D {
     }
 
     public void setFont(Font font) {
-        if (font == null) {
-            paint.setTypeface(Typeface.DEFAULT);
-            paint.setTextSize(46);
-        } else {
-            paint.setTypeface(font.getTypeface());
-            paint.setTextSize(font.getSize());
+        try {
+            if (font == null) {
+                paint.setTypeface(Typeface.DEFAULT);
+                paint.setTextSize(46);
+            } else {
+                paint.setTypeface(font.getTypeface());
+                paint.setTextSize(font.getSize());
+            }
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
         }
     }
 
@@ -97,9 +116,13 @@ public final class Graphics2D {
     }
 
     public void setColor(int c) {
-        // Do not allow the drawing op to change the color of the context if the color is locked
-        if (colorLocked) return;
-        paint.setColor(c);
+        try {
+            // Do not allow the drawing op to change the color of the context if the color is locked
+            if (colorLocked) return;
+            paint.setColor(c);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void setStrokeWidth(float width) {
@@ -107,63 +130,83 @@ public final class Graphics2D {
     }
 
     public void setStroke(float width, float miterLimit, int cap, int join) {
-        paint.setStrokeWidth(width);
-        paint.setStrokeMiter(miterLimit);
-        switch (cap) {
-            case CAP_BUTT:
-                paint.setStrokeCap(Paint.Cap.BUTT);
-                break;
-            case CAP_ROUND:
-                paint.setStrokeCap(Paint.Cap.ROUND);
-                break;
-            case CAP_SQUARE:
-                paint.setStrokeCap(Paint.Cap.SQUARE);
-                break;
-            default:
-                break;
-        }
-        switch (join) {
-            case JOIN_BEVEL:
-                paint.setStrokeJoin(Paint.Join.BEVEL);
-                break;
-            case JOIN_MITER:
-                paint.setStrokeJoin(Paint.Join.MITER);
-                break;
-            case JOIN_ROUND:
-                paint.setStrokeJoin(Paint.Join.ROUND);
-                break;
-            default:
-                break;
+        try {
+            paint.setStrokeWidth(width);
+            paint.setStrokeMiter(miterLimit);
+            switch (cap) {
+                case CAP_BUTT:
+                    paint.setStrokeCap(Paint.Cap.BUTT);
+                    break;
+                case CAP_ROUND:
+                    paint.setStrokeCap(Paint.Cap.ROUND);
+                    break;
+                case CAP_SQUARE:
+                    paint.setStrokeCap(Paint.Cap.SQUARE);
+                    break;
+                default:
+                    break;
+            }
+            switch (join) {
+                case JOIN_BEVEL:
+                    paint.setStrokeJoin(Paint.Join.BEVEL);
+                    break;
+                case JOIN_MITER:
+                    paint.setStrokeJoin(Paint.Join.MITER);
+                    break;
+                case JOIN_ROUND:
+                    paint.setStrokeJoin(Paint.Join.ROUND);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
         }
     }
 
     public void translate(float dx, float dy) {
-        T[TX] += T[SX] * dx;
-        T[TY] += T[SY] * dy;
+        try {
+            T[TX] += T[SX] * dx;
+            T[TY] += T[SY] * dy;
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void scale(float sx, float sy) {
-        T[SX] *= sx;
-        T[SY] *= sy;
+        try {
+            T[SX] *= sx;
+            T[SY] *= sy;
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void rotate(float angle, float px, float py) {
-        float r = (float) (angle / Math.PI * 180);
-        T[R] += r;
-        T[PX] = x(px);
-        T[PY] = y(py);
+        try {
+            float r = (float) (angle / Math.PI * 180);
+            T[R] += r;
+            T[PX] = x(px);
+            T[PY] = y(py);
 
-        Canvas canvas = getCanvas();
-        if (canvas == null) return;
-        canvas.rotate(r, px(), py());
+            Canvas canvas = getCanvas();
+            if (canvas == null) return;
+            canvas.rotate(r, px(), py());
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void reset() {
-        float r = r(), px = px(), py = py();
-        Canvas canvas = getCanvas();
-        T = new float[]{1, 0, 0, 0, 1, 0, 0, 0, 0};
-        if (canvas == null) return;
-        canvas.rotate(-r, px, py);
+        try {
+            float r = r(), px = px(), py = py();
+            Canvas canvas = getCanvas();
+            T = new float[]{1, 0, 0, 0, 1, 0, 0, 0, 0};
+            if (canvas == null) return;
+            canvas.rotate(-r, px, py);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public float sx() {
@@ -205,90 +248,126 @@ public final class Graphics2D {
     private StringBuilder sb = new StringBuilder();
 
     public void drawChar(char c, float x, float y) {
-        sb.delete(0, sb.length());
-        sb.append(c);
-        drawText(sb.toString(), x, y);
+        try {
+            sb.delete(0, sb.length());
+            sb.append(c);
+            drawText(sb.toString(), x, y);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void drawText(String txt, float x, float y) {
-        Canvas canvas = getCanvas();
-        if (canvas == null) return;
-        float s = paint.getTextSize();
-        float sx = paint.getTextScaleX();
-        paint.setTextSize(s * sy());
-        paint.setTextScaleX(sx() / sy());
-        canvas.drawText(txt, x(x), y(y), paint);
-        paint.setTextSize(s);
-        paint.setTextScaleX(sx);
+        try {
+            Canvas canvas = getCanvas();
+            if (canvas == null) return;
+            float s = paint.getTextSize();
+            float sx = paint.getTextScaleX();
+            paint.setTextSize(s * sy());
+            paint.setTextScaleX(sx() / sy());
+            canvas.drawText(txt, x(x), y(y), paint);
+            paint.setTextSize(s);
+            paint.setTextScaleX(sx);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void drawLine(float x1, float y1, float x2, float y2) {
-        Canvas canvas = getCanvas();
-        if (canvas == null) return;
-        float th = paint.getStrokeWidth();
-        float sw = h(th);
-        if (sw < 1.f) sw = 1.f;
-        paint.setStrokeWidth(sw);
-        float xx1 = x(x1);
-        float yy1 = y(y1);
-        float xx2 = x(x2);
-        float yy2 = y(y2);
-        canvas.drawLine(xx1, yy1, xx2, yy2, paint);
-        paint.setStrokeWidth(th);
+        try {
+            Canvas canvas = getCanvas();
+            if (canvas == null) return;
+            float th = paint.getStrokeWidth();
+            float sw = h(th);
+            if (sw < 1.f) sw = 1.f;
+            paint.setStrokeWidth(sw);
+            float xx1 = x(x1);
+            float yy1 = y(y1);
+            float xx2 = x(x2);
+            float yy2 = y(y2);
+            canvas.drawLine(xx1, yy1, xx2, yy2, paint);
+            paint.setStrokeWidth(th);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     private void renderRect(float x, float y, float w, float h, Paint.Style s) {
-        Canvas canvas = getCanvas();
-        if (canvas == null) return;
-        Paint.Style style = paint.getStyle();
-        // draw
-        paint.setStyle(s);
-        float th = paint.getStrokeWidth();
-        paint.setStrokeWidth(h(th));
-        float xx = x(x);
-        float yy = y(y);
-        float ww = w(w);
-        float hh = h(h);
-        canvas.drawRect(xx, yy, xx + ww, yy + hh, paint);
-        // reset
-        paint.setStyle(style);
-        paint.setStrokeWidth(th);
+        try {
+            Canvas canvas = getCanvas();
+            if (canvas == null) return;
+            Paint.Style style = paint.getStyle();
+            // draw
+            paint.setStyle(s);
+            float th = paint.getStrokeWidth();
+            paint.setStrokeWidth(h(th));
+            float xx = x(x);
+            float yy = y(y);
+            float ww = w(w);
+            float hh = h(h);
+            canvas.drawRect(xx, yy, xx + ww, yy + hh, paint);
+            // reset
+            paint.setStyle(style);
+            paint.setStrokeWidth(th);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void drawRect(float x, float y, float w, float h) {
-        renderRect(x, y, w, h, Paint.Style.STROKE);
+        try {
+            renderRect(x, y, w, h, Paint.Style.STROKE);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void fillRect(float x, float y, float w, float h) {
-        renderRect(x, y, w, h, Paint.Style.FILL);
+        try {
+            renderRect(x, y, w, h, Paint.Style.FILL);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     private RectF tr = new RectF();
 
     private void renderRoundRect(float x, float y, float w, float h, float rx, float ry, Paint.Style s) {
-        Canvas canvas = getCanvas();
-        if (canvas == null) return;
-        Paint.Style style = paint.getStyle();
-        paint.setStyle(s);
-        float th = paint.getStrokeWidth();
-        paint.setStrokeWidth(h(th));
-        tr.left = x(x);
-        tr.top = y(y);
-        tr.right = tr.left + w(w);
-        tr.bottom = tr.top + h(h);
-        float rxx = w(rx);
-        float ryy = h(ry);
-        canvas.drawRoundRect(tr, rxx, ryy, paint);
-        // reset
-        paint.setStyle(style);
-        paint.setStrokeWidth(th);
+        try {
+            Canvas canvas = getCanvas();
+            if (canvas == null) return;
+            Paint.Style style = paint.getStyle();
+            paint.setStyle(s);
+            float th = paint.getStrokeWidth();
+            paint.setStrokeWidth(h(th));
+            tr.left = x(x);
+            tr.top = y(y);
+            tr.right = tr.left + w(w);
+            tr.bottom = tr.top + h(h);
+            float rxx = w(rx);
+            float ryy = h(ry);
+            canvas.drawRoundRect(tr, rxx, ryy, paint);
+            // reset
+            paint.setStyle(style);
+            paint.setStrokeWidth(th);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void drawRoundRect(float x, float y, float w, float h, float rx, float ry) {
-        renderRoundRect(x, y, w, h, rx, ry, Paint.Style.STROKE);
+        try {
+            renderRoundRect(x, y, w, h, rx, ry, Paint.Style.STROKE);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 
     public void fillRoundRect(float x, float y, float w, float h, float rx, float ry) {
-        renderRoundRect(x, y, w, h, rx, ry, Paint.Style.FILL);
+        try {
+            renderRoundRect(x, y, w, h, rx, ry, Paint.Style.FILL);
+        } catch (Exception e) {
+            Log.e("Graphics2D.java", "onDraw error: " + e.getMessage());
+        }
     }
 }

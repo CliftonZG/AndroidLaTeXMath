@@ -1,6 +1,9 @@
 package io.nano.tex.test;
 
 import android.app.Application;
+import android.util.Log;
+
+import java.security.spec.ECField;
 
 import io.nano.tex.LaTeX;
 
@@ -12,6 +15,14 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LaTeX.instance().init(this);
+        try {
+            LaTeX latexInstance = LaTeX.instance();
+            Log.v("nanotextest", "latexInstance: " + latexInstance);
+            if (latexInstance != null) {
+                latexInstance.init(this);
+            }
+        } catch (Exception e) {
+            Log.e("nanotextest", String.valueOf(e));
+        }
     }
 }

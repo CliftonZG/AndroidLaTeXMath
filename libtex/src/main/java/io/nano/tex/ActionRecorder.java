@@ -43,22 +43,27 @@ final class ActionRecorder {
 
         @Override
         public String toString() {
-            StringBuilder builder = new StringBuilder();
-            builder
-                .append("{ action: ")
-                .append(action)
-                .append(", arg: ")
-                .append(arg)
-                .append(", args: [");
-            if (args == null) builder.append("null");
-            else for (float x : args) builder.append(x).append(", ");
-            builder.append("] }");
-            return builder.toString();
+            try {
+                StringBuilder builder = new StringBuilder();
+                builder
+                        .append("{ action: ")
+                        .append(action)
+                        .append(", arg: ")
+                        .append(arg)
+                        .append(", args: [");
+                if (args == null) builder.append("null");
+                else for (float x : args) builder.append(x).append(", ");
+                builder.append("] }");
+                return builder.toString();
+            } catch (Exception e) {
+                Log.e("ActionRecorder", "Error: " + e.getMessage());
+                throw new RuntimeException("toString error");
+            }
         }
     }
 
-    private List<Action> actions = new LinkedList<>();
-    private Action origin = new Action(ACT_translate, null, new float[]{0, 0});
+    private final List<Action> actions = new LinkedList<>();
+    private final Action origin = new Action(ACT_translate, null, new float[]{0, 0});
 
     ActionRecorder() {
         actions.add(origin);
@@ -76,7 +81,7 @@ final class ActionRecorder {
 
     void play(Graphics2D g2) {
         for (Action act : actions) {
-            if (BuildConfig.DEBUG) Log.d(TAG, act.toString());
+            // if (BuildConfig.DEBUG) Log.d(TAG, act.toString());
             play(g2, act);
         }
     }

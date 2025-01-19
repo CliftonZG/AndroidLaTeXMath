@@ -23,6 +23,10 @@ extern jmethodID gMethodCreateFontFromFile;
 /** io/nano/tex/ActionRecorder */
 extern jmethodID gMethodRecord;
 
+extern jclass gClassAssetJNIManager;
+extern jmethodID gMethodReadFileFromAssets;
+extern jmethodID gMethodGetBytes;
+
 #ifdef __cplusplus
 }
 #endif
